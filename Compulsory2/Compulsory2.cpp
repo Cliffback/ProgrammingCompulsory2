@@ -27,14 +27,13 @@ struct player
 player house;
 player player1;
 
-std::array<int, 10> cardArray{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+std::array<int, 13> cardArray{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
 
 void shuffleCards()
 {
 	std::mt19937 mt{ static_cast<std::mt19937::result_type>(std::time(nullptr)) };
 	std::shuffle(cardArray.begin(), cardArray.end(), mt);
 }
-
 
 
 void drawCard(player& player)
@@ -46,12 +45,17 @@ void drawCard(player& player)
 
 	cardsDrawn++;
 
+	if (card > 1 && card <=10)
+	{
+		std::cout << "\nCard drewn is " << card << "\n";
+
+	}
 	// This following section is for checking if card drawn is an ace, and what to do with it
-	if (card==1)
+	else if (card==1)
 	{
 		if (player.ai == false)
 		{
-			std::cout << "\nYou drew an ace. D you want it to be a 1 or an 11?\n";
+			std::cout << "\nCard drewn is an ace. D you want it to be a 1 or an 11?\n";
 			int choice = 0;
 			while (true)
 			{
@@ -72,16 +76,33 @@ void drawCard(player& player)
 		{
 			if (player.sum <=11)
 			{
-				std::cout << "\nThe house drew an ace, and decided to make it an 11.";
+				std::cout << "\nCard drewn is an ace. The house decided it to be an 11.";
 				card = card + 10;
 			}
 			else if (player.sum > 11)
 			{
-				std::cout << "\nThe house drew an ace, and decided to make it a 1.";
+				std::cout << "\nCard drewn is an ace. The house decided it to be a 1.";
 			}
 		}
 	}
 
+	if (card==11)
+	{
+		std::cout << "\nCard drewn is a Knight\n";
+		card = 10;
+	}
+
+	if (card == 12)
+	{
+		std::cout << "\nCard drewn is a Queen\n";
+		card = 10;
+	}
+
+	if (card == 13)
+	{
+		std::cout << "\nCard drewn is a King\n";
+		card = 10;
+	}
 	// Card drawn, card sum and number of cards drawn passed out of the function:
 	player.sum = player.sum + card;
 	player.drawn++;
@@ -146,7 +167,14 @@ int main()
 				<< "\nWelcome to Blackjack - Round " << roundsPlayed
 				<< "\n\nYou now have " << player1.money << "$"
 				<< "\nThe house has " << house.money << "$"
-				<< "\n\nThe minimum fee for starting a game is 10$. How much do you want to spend?\n\n";
+				<< "\n\nPress any key to play, or Q to quit: ";
+			char play = _getch(); 
+			
+			if (play == 'q')
+			{
+				return 0;
+			}
+				std::cout << "\n\nHow much do you want to bet? The minimum is 10$\n\n";
 
 
 			while (true)
@@ -156,13 +184,13 @@ int main()
 				{
 					player1.money = player1.money - spend;
 					house.money = house.money - spend;
-					std::cout << "\nMoney spent: " << spend << "$";
+					std::cout << "\nMoney bet: " << spend << "$";
 					playerTurn = 1;
 					break;
 				}
 				else if (spend < 10)
 				{
-					std::cout << "\nTo little money payed. Please try again.\n";
+					std::cout << "\nTo little money bet. Please try again.\n";
 				}
 				else
 				{
@@ -178,7 +206,6 @@ int main()
 			system("CLS");
 			drawCard(player1);
 			
-			std::cout << "\nYou drew: " << player1.yourCard;
 			std::cout << "\nYour sum is: " << player1.sum;
 			std::cout << "\nYou have drawn " << player1.drawn << " cards";
 
@@ -206,7 +233,6 @@ int main()
 		{
 			system("CLS");
 			drawCard(house);
-			std::cout << "\nHouse drew: " << house.yourCard;
 			std::cout << "\nHouse sum is: " << house.sum;
 			std::cout << "\nHouse has drawn: " << house.drawn << " cards";
 		
